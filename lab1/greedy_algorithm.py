@@ -17,7 +17,7 @@ def greedy_balance(machine_num, t_list, sort=False):
 
 
 if __name__ == '__main__':
-    t = [1, 1, 2]
     m = 2
+    t = [1, 1, 2]
     print(greedy_balance(m, t))
     print(greedy_balance(m, t, sort=True))
