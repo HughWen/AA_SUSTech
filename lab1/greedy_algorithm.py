@@ -2,11 +2,11 @@ def greedy_balance(machine_num, t_list, sort=False):
     # if "sort" is true, sort the time list.
     if sort:
         t_list.sort(reverse=True)
-	# init
+    # init
     makespan = 0
     assigns = [list() for i in range(machine_num)]
     accumulators = [0] * machine_num
-	# assign job for machine
+    # assign job for machine
     for i in range(len(t_list)):
         min_index = accumulators.index(min(accumulators))
         assigns[min_index].append(t_list[i])
