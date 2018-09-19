@@ -1,32 +1,33 @@
-def limit_greedy(machine_num, t_list, specific_index, specific_machine_index, fold):
-    makespan = 0
-    assigns = [list() for i in range(machine_num)]
-    accumulators = [0] * machine_num
-    # assign specific joy to specific machine
-    for index in sorted(specific_index, reverse=True):
-        assigns[specific_machine_index].append(t_list[index])
-        accumulators[specific_machine_index] += t_list[index]
-        del t_list[index]
-    # sort the task list
+class Machine():
+    def __init__(self, limitation_task, efficiency):
+        self.limitation_task = limitation_task
+        self.efficiency = efficiency
+        self.accumulator = 0
+        self.task_list = []
+
+
+def limit_greedy(machine_list, t_list):
     t_list.sort(reverse=True)
-    # assign job for machine
-    for i in range(len(t_list)):
-        min_value = min(accumulators)
-        min_list = [j for j, x in enumerate(accumulators) if x == min_value]
-        # if specific machine in minimum task time list, put the task to specific machine
-        if specific_machine_index in min_list:
-            assigns[specific_machine_index].append(t_list[i])
-            accumulators[specific_machine_index] += t_list[i]
-        else:
-            assigns[min_list[0]].append(t_list[i])
-            accumulators[min_list[0]] += t_list[i] * fold
-    makespan = max(accumulators)
-    return makespan, assigns, accumulators
+    for t in t_list:
+        available_machine_list = [
+            x for x in machine_list if t in x.limitation_task]
+        min_accumu = min([m.accumulator for m in available_machine_list])
+        m_list = [m for m in available_machine_list if m.accumulator == min_accumu]
+        max_eff = max([m.efficiency for m in m_list])
+        for m in m_list:
+            if m.efficiency == max_eff:
+                m.accumulator += t / m.efficiency
+                m.task_list.append(t)
+                break
+    return max([m.accumulator for m in machine_list])
+
 
 if __name__ == '__main__':
-    m = 3
-    t = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    specific_index = [8, 9]
-    specific_machine_index = 2
-    fold = 2
-    print(limit_greedy(m, t, specific_index, specific_machine_index, fold))
+    m1 = Machine([i + 1 for i in range(7)], 0.5)
+    m2 = Machine([i + 1 for i in range(8)], 0.5)
+    m3 = Machine([i + 1 for i in range(10)], 1)
+    max_accumulator = limit_greedy([m1, m2, m3], [i + 1 for i in range(10)])
+    print(max_accumulator)
+    print(m1.task_list, m1.accumulator)
+    print(m2.task_list, m2.accumulator)
+    print(m3.task_list, m3.accumulator)
