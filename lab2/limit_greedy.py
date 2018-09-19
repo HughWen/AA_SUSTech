@@ -17,7 +17,6 @@ def limit_greedy(machine_num, t_list, specific_index, specific_machine_index, fo
         if specific_machine_index in min_list:
             assigns[specific_machine_index].append(t_list[i])
             accumulators[specific_machine_index] += t_list[i]
-        # min_index = accumulators.index(min(accumulators))
         else:
             assigns[min_list[0]].append(t_list[i])
             accumulators[min_list[0]] += t_list[i] * fold
